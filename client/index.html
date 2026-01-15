@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nebula Drive">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <!-- Enregistrement du Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('✅ Service Worker enregistré'))
+                    .catch(err => console.error('❌ Erreur SW:', err));
+                });
+            }
+    </script>
+
+    <title>Nebula Drive- Mes fichiers</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container" id="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                        </svg>
+                    </div>
+                    Nebula Drive
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Fichiers</div>
+                    <a class="nav-item active" id="my-files" onclick="fileManager.loadFiles()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Mes fichiers
+                    </a>
+                    <a class="nav-item" id="shared-with-me" onclick="fileManager.loadSharedFiles()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Partagés avec moi
+                    </a>
+                    <a class="nav-item" id="my-shares" onclick="fileManager.loadMyShares()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Mes partages
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Actions rapides</div>
+                    <a class="nav-item" onclick="openUploadModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Upload
+                    </a>
+                    <a class="nav-item" onclick="openNewFolderModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            <line x1="12" y1="11" x2="12" y2="17"></line>
+                            <line x1="9" y1="14" x2="15" y2="14"></line>
+                        </svg>
+                        Nouveau dossier
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administration</div>
+                    <a class="nav-item" id="admin-link" href="admin.html" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Panel Admin
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- Storage Info -->
+            <div class="storage-info">
+                <div class="storage-label">
+                    <span>Stockage</span>
+                    <span id="storage-label">0 B / 100 MB</span>
+                </div>
+                <div class="storage-bar">
+                    <div class="storage-bar-fill" id="storage-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menu-toggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-current">Mes fichiers</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-box">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" class="search-input" id="search-input" placeholder="Rechercher des fichiers...">
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <button class="header-btn" id="notifications-btn" title="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-dot" id="notification-badge" style="display: none;"></span>
+                    </button>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="header-btn" onclick="toggleTheme()" title="Changer le thème">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="dropdown" id="user-dropdown">
+                        <div class="user-menu" id="user-menu">
+                            <div class="user-avatar" id="user-avatar">?</div>
+                            <div class="user-info">
+                                <span class="user-name" id="user-name">Utilisateur</span>
+                                <span class="user-role" id="user-role">basic</span>
+                            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" onclick="openProfileModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Mon profil
+                            </a>
+
+                            <!-- ✅ NOUVEAU : Bouton pour relancer le guide -->
+                            <a class="dropdown-item" onclick="onboardingManager.restart()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                    🎓 Relancer le guide
+                            </a>
+
+                            <a class="dropdown-item" onclick="openChangePasswordModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                Changer mot de passe
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" onclick="logout()" style="color: var(--accent-danger);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <button  id="upload-button" class="btn btn-primary" onclick="openUploadModal()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Upload
+                        </button>
+                        <button id="new-folder-button" class="btn btn-secondary" onclick="openNewFolderModal()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                <line x1="12" y1="11" x2="12" y2="17"></line>
+                                <line x1="9" y1="14" x2="15" y2="14"></line>
+                            </svg>
+                            Nouveau dossier
+                        </button>
+                        <button class="btn btn-secondary" onclick="fileManager.openBulkShareModal()" title="Partager la sélection">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            Partager sélection
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="view-toggle">
+                            <button data-view="grid" class="active" title="Vue grille">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            </button>
+                            <button data-view="list" title="Vue liste">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Files Container -->
+                <div class="files-container" id="files-container">
+                    <!-- Fichiers chargés dynamiquement -->
+                    <div class="empty-state">
+                        <div class="loading-spinner"></div>
+                        <p>Chargement...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Notifications Panel -->
+        <div class="notifications-panel" id="notifications-panel">
+            <div class="notifications-header">
+                <h3 class="notifications-title">Notifications <span id="notification-count" style="display: none;"></span></h3>
+                <div>
+                    <button class="btn btn-sm btn-secondary" onclick="notificationManager.markAllAsRead()">Tout marquer lu</button>
+                    <button class="modal-close" id="close-notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="notifications-list" id="notifications-list">
+                <!-- Notifications chargées dynamiquement -->
+            </div>
+        </div>
+        
+        <!-- Context Menu -->
+        <div class="context-menu" id="context-menu"></div>
+    </div>
+    
+    <!-- ========== MODALS ========== -->
+    
+    <!-- Modal Upload -->
+    <div id="upload-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload de fichiers</h3>
+                <button class="modal-close" onclick="closeModal('upload-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="upload-zone">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-text">Glissez vos fichiers ici</p>
+                    <p class="upload-hint">ou <span class="upload-browse">parcourez</span> pour sélectionner</p>
+                </div>
+                <input type="file" id="file-input" multiple style="display: none;">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nouveau dossier -->
+    <div id="new-folder-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouveau dossier</h3>
+                <button class="modal-close" onclick="closeModal('new-folder-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="new-folder-name">Nom du dossier</label>
+                    <input type="text" id="new-folder-name" class="form-input" placeholder="Mon dossier">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('new-folder-modal')">Annuler</button>
+                <button class="btn btn-primary" onclick="createNewFolder()">Créer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Renommer -->
+    <div id="rename-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Renommer</h3>
+                <button class="modal-close" onclick="closeModal('rename-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="rename-file-id">
+                <div class="form-group">
+                    <label class="form-label" for="rename-input">Nouveau nom</label>
+                    <input type="text" id="rename-input" class="form-input" placeholder="Nouveau nom">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('rename-modal')">Annuler</button>
+                <button class="btn btn-primary" onclick="renameFile()">Renommer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Déplacer -->
+    <div id="move-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Déplacer vers</h3>
+                <button class="modal-close" onclick="closeModal('move-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="move-file-id">
+                <div class="form-group">
+                    <label class="form-label" for="move-target">Dossier de destination</label>
+                    <select id="move-target" class="form-select">
+                        <option value="root">/ (Racine)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('move-modal')">Annuler</button>
+                <button class="btn btn-primary" onclick="moveFile()">Déplacer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Partage -->
+    <div id="share-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Partager</h3>
+                <button class="modal-close" onclick="shareManager.closeShareModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Ajouter un utilisateur</label>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="share-user-search" style="flex: 1; position: relative;">
+                            <input type="text" 
+                                   id="share-user-input" 
+                                   class="form-input" 
+                                   placeholder="Rechercher par nom d'utilisateur..."
+                                   oninput="shareManager.searchUsers(this.value)"
+                                   autocomplete="off">
+                            <div id="share-user-results" class="share-user-results" style="display: none;"></div>
+                        </div>
+                        <select id="share-permission" class="form-select" style="width: auto;">
+                            <option value="read">Lecture</option>
+                            <option value="write">Écriture</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="shared-users-list" id="shared-users-list">
+                    <!-- Liste des utilisateurs partagés -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="shareManager.closeShareModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Confirmation -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmation</h3>
+                <button class="modal-close" onclick="closeModal('confirm-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-message">Êtes-vous sûr ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirm-modal')">Annuler</button>
+                <button class="btn btn-danger" onclick="confirmAction()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Profil -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Mon profil</h3>
+                <button class="modal-close" onclick="closeModal('profile-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="user-avatar" id="profile-avatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto;">?</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nom d'utilisateur</label>
+                    <input type="text" id="profile-username" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="text" id="profile-email" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rôle</label>
+                    <input type="text" id="profile-role" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Abonnement</label>
+                    <input type="text" id="profile-subscription" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Espace utilisé</label>
+                    <input type="text" id="profile-storage" class="form-input" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('profile-modal')">Fermer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Changer mot de passe -->
+    <div id="password-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Changer le mot de passe</h3>
+                <button class="modal-close" onclick="closeModal('password-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="password-error" class="alert alert-error" style="display: none;"></div>
+                <div id="password-success" class="alert alert-success" style="display: none;"></div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="current-password">Mot de passe actuel</label>
+                    <input type="password" id="current-password" class="form-input" autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="new-password">Nouveau mot de passe</label>
+                    <input type="password" id="new-password" class="form-input" autocomplete="new-password">
+                    <p class="form-hint">Minimum 6 caractères</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="confirm-new-password">Confirmer le nouveau mot de passe</label>
+                    <input type="password" id="confirm-new-password" class="form-input" autocomplete="new-password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('password-modal')">Annuler</button>
+                <button class="btn btn-primary" onclick="changePassword()">Changer</button>
+            </div>
+        </div>
+    </div>
+    <div id="bulk-share-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Partager plusieurs fichiers</h3>
+            <button class="modal-close" onclick="closeModal('bulk-share-modal')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Fichiers sélectionnés</label>
+                <div id="bulk-share-files-list"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="bulk-share-users">Utilisateurs (séparés par des virgules)</label>
+                <textarea 
+                    id="bulk-share-users" 
+                    class="form-input" 
+                    rows="3" 
+                    placeholder="Ex: alice, bob, charlie"
+                    style="resize: vertical;"></textarea>
+                <p class="form-hint">Entrez les noms d'utilisateurs séparés par des virgules, espaces ou point-virgules</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="bulk-share-permission">Permission</label>
+                <select id="bulk-share-permission" class="form-select">
+                    <option value="read">👁️ Lecture seule</option>
+                    <option value="write">✏️ Lecture et écriture</option>
+                </select>
+            </div>
+
+            <div style="padding: 12px; background: var(--bg-tertiary); border-radius: 8px; border-left: 3px solid var(--accent-primary);">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+                    💡 <strong>Astuce :</strong> Tous les fichiers sélectionnés seront partagés avec tous les utilisateurs indiqués.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('bulk-share-modal')">Annuler</button>
+            <button class="btn btn-primary" onclick="fileManager.bulkShare()">Partager</button>
+        </div>
+    </div>
+</div>
+
+<!-- Utilitaires -->
+ <div id="bulk-share-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Partager plusieurs fichiers</h3>
+            <button class="modal-close" onclick="closeModal('bulk-share-modal')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Fichiers sélectionnés</label>
+                <div id="bulk-share-files-list"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="bulk-share-users">Utilisateurs (séparés par des virgules)</label>
+                <textarea 
+                    id="bulk-share-users" 
+                    class="form-input" 
+                    rows="3" 
+                    placeholder="Ex: alice, bob, charlie"
+                    style="resize: vertical;"></textarea>
+                <p class="form-hint">Entrez les noms d'utilisateurs séparés par des virgules, espaces ou point-virgules</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="bulk-share-permission">Permission</label>
+                <select id="bulk-share-permission" class="form-select">
+                    <option value="read">👁️ Lecture seule</option>
+                    <option value="write">✏️ Lecture et écriture</option>
+                </select>
+            </div>
+
+            <div style="padding: 12px; background: var(--bg-tertiary); border-radius: 8px; border-left: 3px solid var(--accent-primary);">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+                    💡 <strong>Astuce :</strong> Tous les fichiers sélectionnés seront partagés avec tous les utilisateurs indiqués.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('bulk-share-modal')">Annuler</button>
+            <button class="btn btn-primary" onclick="fileManager.bulkShare()">Partager</button>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/files.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/onboarding.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>    
+        
+        function openProfileModal() {
+            const user = auth.getUser();
+            if (!user) return;
+            
+            document.getElementById('profile-avatar').textContent = user.username.charAt(0).toUpperCase();
+            document.getElementById('profile-username').value = user.username;
+            document.getElementById('profile-email').value = user.email;
+            document.getElementById('profile-role').value = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+            document.getElementById('profile-subscription').value = user.subscription.charAt(0).toUpperCase() + user.subscription.slice(1);
+            document.getElementById('profile-storage').value = `${formatSize(user.storage_used)} / ${formatSize(user.storage_quota)}`;
+            
+            openModal('profile-modal');
+        }
+        
+        function openChangePasswordModal() {
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-new-password').value = '';
+            document.getElementById('password-error').style.display = 'none';
+            document.getElementById('password-success').style.display = 'none';
+            
+            openModal('password-modal');
+        }
+        
+        async function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-new-password').value;
+            const errorDiv = document.getElementById('password-error');
+            const successDiv = document.getElementById('password-success');
+            
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                errorDiv.textContent = 'Veuillez remplir tous les champs';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                errorDiv.textContent = 'Le nouveau mot de passe doit contenir au moins 6 caractères';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'Les mots de passe ne correspondent pas';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                await api.changePassword(currentPassword, newPassword);
+                successDiv.textContent = 'Mot de passe modifié avec succès';
+                successDiv.style.display = 'block';
+                
+                // Vider les champs
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-new-password').value = '';
+                
+                // Fermer après 2 secondes
+                setTimeout(() => closeModal('password-modal'), 2000);
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // Gestion des raccourcis sur les champs de saisie des modals
+        document.getElementById('new-folder-name').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') createNewFolder();
+        });
+        
+        document.getElementById('rename-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') renameFile();
+        });
+    </script>
+</body>
+</html>

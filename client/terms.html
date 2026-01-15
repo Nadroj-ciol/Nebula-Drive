@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions d'Utilisation - Nebula Drive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -40px auto 40px;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #64748b;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #1e293b;
+            margin: 30px 0 16px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: #334155;
+            margin: 24px 0 12px;
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #64748b;
+        }
+
+        ul, ol {
+            margin: 16px 0 16px 24px;
+            color: #64748b;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .last-updated {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        strong {
+            color: #1e293b;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📜 Mentions Légales</h1>
+        <p>Conditions d'Utilisation & Politique de Confidentialité</p>
+    </div>
+
+    <div class="container">
+        <a href="index.html" class="back-button">
+            ← Retour à l'accueil
+        </a>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('terms')">
+                Conditions d'Utilisation
+            </button>
+            <button class="tab" onclick="showTab('privacy')">
+                Politique de Confidentialité
+            </button>
+            <button class="tab" onclick="showTab('security')">
+                Sécurité & Données
+            </button>
+        </div>
+
+        <!-- ========== CONDITIONS D'UTILISATION ========== -->
+        <div id="terms" class="tab-content active">
+            <div class="last-updated">
+                📅 Dernière mise à jour : <strong>15 janvier 2025</strong>
+            </div>
+
+            <h2>📋 1. Conditions Générales d'Utilisation</h2>
+            
+            <h3>1.1 Acceptation des Conditions</h3>
+            <p>
+                En utilisant <strong>Nebula Drive</strong>, vous acceptez ces conditions d'utilisation. 
+                Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
+            </p>
+
+            <div class="highlight-box">
+                <strong>✅ En bref :</strong> L'utilisation de Nebula Drive implique votre accord 
+                avec ces conditions. Nous nous engageons à respecter vos données et votre vie privée.
+            </div>
+
+            <h3>1.2 Description du Service</h3>
+            <p>Nebula Drive est un service de stockage cloud qui vous permet de :</p>
+            <ul>
+                <li>📤 Uploader et stocker vos fichiers de manière sécurisée</li>
+                <li>🔗 Partager vos fichiers avec d'autres utilisateurs</li>
+                <li>🔍 Rechercher et organiser vos documents</li>
+                <li>🔒 Protéger vos données avec un chiffrement avancé</li>
+                <li>📱 Accéder à vos fichiers depuis n'importe quel appareil</li>
+            </ul>
+
+            <h3>1.3 Compte Utilisateur</h3>
+            <p>Pour utiliser Nebula Drive, vous devez :</p>
+            <ol>
+                <li>Créer un compte avec une adresse email valide</li>
+                <li>Choisir un mot de passe sécurisé (minimum 6 caractères)</li>
+                <li>Maintenir la confidentialité de vos identifiants</li>
+                <li>Ne pas partager votre compte avec d'autres personnes</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>⚠️ Important :</strong> Vous êtes responsable de toutes les activités 
+                effectuées depuis votre compte. Si vous suspectez une utilisation non autorisée, 
+                contactez-nous immédiatement.
+            </div>
+
+            <h3>1.4 Usage Acceptable</h3>
+            <p>Vous vous engagez à <strong>NE PAS</strong> :</p>
+            <ul>
+                <li>❌ Uploader du contenu illégal, offensant ou protégé par des droits d'auteur</li>
+                <li>❌ Utiliser le service pour des activités malveillantes (virus, malware)</li>
+                <li>❌ Tenter d'accéder aux comptes d'autres utilisateurs</li>
+                <li>❌ Surcharger nos serveurs avec des requêtes excessives</li>
+                <li>❌ Utiliser le service pour du spam ou du phishing</li>
+            </ul>
+
+            <h3>1.5 Limites du Service</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type de Compte</th>
+                        <th>Espace de Stockage</th>
+                        <th>Taille Max par Fichier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gratuit (Basic)</td>
+                        <td>100 MB</td>
+                        <td>10 MB</td>
+                    </tr>
+                    <tr>
+                        <td>Premium</td>
+                        <td>10 GB</td>
+                        <td>100 MB</td>
+                    </tr>
+                    <tr>
+                        <td>Business</td>
+                        <td>Illimité</td>
+                        <td>1 GB</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>1.6 Résiliation</h3>
+            <p>
+                Nous nous réservons le droit de suspendre ou supprimer votre compte en cas de 
+                violation de ces conditions. Vous pouvez également supprimer votre compte à tout moment 
+                depuis les paramètres.
+            </p>
+
+            <h2>⚖️ 2. Responsabilités</h2>
+            
+            <h3>2.1 Votre Responsabilité</h3>
+            <p>Vous êtes responsable de :</p>
+            <ul>
+                <li>La légalité du contenu que vous uploadez</li>
+                <li>La sauvegarde de vos données importantes</li>
+                <li>La conformité avec les lois locales</li>
+            </ul>
+
+            <h3>2.2 Notre Responsabilité</h3>
+            <p>Nous nous engageons à :</p>
+            <ul>
+                <li>✅ Protéger vos données avec un chiffrement fort</li>
+                <li>✅ Maintenir un service disponible à 99.9%</li>
+                <li>✅ Respecter votre vie privée</li>
+                <li>✅ Vous informer en cas de problème de sécurité</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>ℹ️ Limitation de garantie :</strong> Nous faisons de notre mieux pour 
+                assurer la disponibilité du service, mais nous ne pouvons garantir une disponibilité 
+                100% sans interruption.
+            </div>
+        </div>
+
+        <!-- ========== POLITIQUE DE CONFIDENTIALITÉ ========== -->
+        <div id="privacy" class="tab-content">
+            <div class="last-updated">
+                📅 Dernière mise à jour : <strong>15 janvier 2025</strong>
+            </div>
+
+            <h2>🔒 Politique de Confidentialité</h2>
+
+            <div class="highlight-box">
+                <strong>🛡️ Notre engagement :</strong> Vos données vous appartiennent. 
+                Nous ne les vendons jamais, ne les analysons pas pour de la publicité, 
+                et appliquons un chiffrement de bout en bout.
+            </div>
+
+            <h3>1. Données Collectées</h3>
+            <p>Nous collectons uniquement les données nécessaires au fonctionnement du service :</p>
+
+            <h4>📧 Données de compte :</h4>
+            <ul>
+                <li>Adresse email (pour l'authentification)</li>
+                <li>Nom d'utilisateur</li>
+                <li>Mot de passe (haché avec bcrypt)</li>
+                <li>Date de création du compte</li>
+            </ul>
+
+            <h4>📁 Données de fichiers :</h4>
+            <ul>
+                <li>Nom du fichier</li>
+                <li>Taille du fichier</li>
+                <li>Type MIME</li>
+                <li>Date d'upload</li>
+                <li><strong>Contenu du fichier (chiffré)</strong></li>
+            </ul>
+
+            <h4>📊 Données d'utilisation :</h4>
+            <ul>
+                <li>Logs d'accès (IP, date/heure) - conservés 30 jours</li>
+                <li>Statistiques d'utilisation (espace utilisé)</li>
+            </ul>
+
+            <h3>2. Utilisation des Données</h3>
+            <p>Vos données sont utilisées uniquement pour :</p>
+            <ul>
+                <li>✅ Fournir le service de stockage</li>
+                <li>✅ Authentifier votre compte</li>
+                <li>✅ Vous envoyer des emails importants (réinitialisation de mot de passe)</li>
+                <li>✅ Améliorer la sécurité du service</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>❌ Nous ne faisons JAMAIS :</strong>
+                <ul style="margin-top: 12px;">
+                    <li>❌ Analyser le contenu de vos fichiers</li>
+                    <li>❌ Vendre vos données à des tiers</li>
+                    <li>❌ Utiliser vos données pour de la publicité ciblée</li>
+                    <li>❌ Partager vos informations sans votre consentement</li>
+                </ul>
+            </div>
+
+            <h3>3. Partage de Données</h3>
+            <p>Vos données peuvent être partagées uniquement dans ces cas :</p>
+            <ul>
+                <li>🔗 <strong>Partage volontaire :</strong> Lorsque vous partagez explicitement un fichier</li>
+                <li>⚖️ <strong>Obligation légale :</strong> Si requis par une autorité judiciaire</li>
+                <li>🛡️ <strong>Protection :</strong> Pour prévenir une activité illégale</li>
+            </ul>
+
+            <h3>4. Sécurité</h3>
+            <p>Mesures de sécurité mises en place :</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mesure</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🔐 Chiffrement des mots de passe</td>
+                        <td>Bcrypt avec salt de 10 rounds</td>
+                    </tr>
+                    <tr>
+                        <td>🔒 HTTPS obligatoire</td>
+                        <td>Toutes les communications chiffrées en TLS 1.3</td>
+                    </tr>
+                    <tr>
+                        <td>🔑 Chiffrement des fichiers</td>
+                        <td>AES-256 côté serveur</td>
+                    </tr>
+                    <tr>
+                        <td>🚨 Détection d'intrusion</td>
+                        <td>Monitoring en temps réel</td>
+                    </tr>
+                    <tr>
+                        <td>🔄 Sauvegardes</td>
+                        <td>Quotidiennes avec rétention 30 jours</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>5. Vos Droits (RGPD)</h3>
+            <p>Conformément au RGPD, vous avez le droit de :</p>
+            <ul>
+                <li>📖 <strong>Accès :</strong> Demander une copie de vos données</li>
+                <li>✏️ <strong>Rectification :</strong> Corriger vos données inexactes</li>
+                <li>🗑️ <strong>Suppression :</strong> Supprimer votre compte et toutes vos données</li>
+                <li>📦 <strong>Portabilité :</strong> Exporter vos données en format standard</li>
+                <li>🚫 <strong>Opposition :</strong> Vous opposer au traitement de vos données</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>📧 Pour exercer vos droits :</strong> Contactez-nous à 
+                <code>privacy@nebula-drive.com</code> ou depuis les paramètres de votre compte.
+            </div>
+
+            <h3>6. Conservation des Données</h3>
+            <p>Durée de conservation :</p>
+            <ul>
+                <li>📁 Fichiers : Conservés tant que votre compte est actif</li>
+                <li>👤 Données de compte : Supprimées 30 jours après suppression du compte</li>
+                <li>📊 Logs : Conservés 30 jours maximum</li>
+            </ul>
+        </div>
+
+        <!-- ========== SÉCURITÉ & DONNÉES ========== -->
+        <div id="security" class="tab-content">
+            <div class="last-updated">
+                📅 Dernière mise à jour : <strong>15 janvier 2025</strong>
+            </div>
+
+            <h2>🛡️ Sécurité et Protection des Données</h2>
+
+            <h3>1. Architecture de Sécurité</h3>
+            <p>Nebula Drive utilise une architecture de sécurité multi-couches :</p>
+
+            <div style="background: #f8fafc; padding: 24px; border-radius: 12px; margin: 20px 0;">
+                <h4 style="margin-top: 0;">🔐 Couche 1 : Transport</h4>
+                <ul>
+                    <li>✅ HTTPS obligatoire (TLS 1.3)</li>
+                    <li>✅ Certificats SSL valides</li>
+                    <li>✅ HSTS activé</li>
+                </ul>
+
+                <h4>🔒 Couche 2 : Authentification</h4>
+                <ul>
+                    <li>✅ Mots de passe hachés (bcrypt)</li>
+                    <li>✅ Sessions sécurisées (JWT)</li>
+                    <li>✅ Protection contre force brute</li>
+                </ul>
+
+                <h4>🔑 Couche 3 : Données</h4>
+                <ul>
+                    <li>✅ Chiffrement des fichiers (AES-256)</li>
+                    <li>✅ Base de données chiffrée</li>
+                    <li>✅ Sauvegardes chiffrées</li>
+                </ul>
+            </div>
+
+            <h3>2. Bonnes Pratiques Recommandées</h3>
+            
+            <div class="highlight-box">
+                <strong>💡 Conseils pour sécuriser votre compte :</strong>
+                <ol style="margin-top: 12px;">
+                    <li>Utilisez un mot de passe fort (12+ caractères, mélangeant majuscules, minuscules, chiffres et symboles)</li>
+                    <li>Ne partagez jamais votre mot de passe</li>
+                    <li>Activez l'authentification à deux facteurs (2FA) dès qu'elle sera disponible</li>
+                    <li>Déconnectez-vous des appareils partagés</li>
+                    <li>Vérifiez régulièrement vos sessions actives</li>
+                </ol>
+            </div>
+
+            <h3>3. Que faire en cas de problème ?</h3>
+            
+            <h4>🚨 Compte compromis</h4>
+            <p>Si vous pensez que votre compte a été compromis :</p>
+            <ol>
+                <li>Changez immédiatement votre mot de passe</li>
+                <li>Déconnectez toutes les sessions actives</li>
+                <li>Vérifiez l'activité récente de votre compte</li>
+                <li>Contactez notre support : <code>security@nebula-drive.com</code></li>
+            </ol>
+
+            <h4>🐛 Faille de sécurité découverte</h4>
+            <p>
+                Si vous découvrez une faille de sécurité, merci de nous la signaler de manière 
+                responsable à <code>security@nebula-drive.com</code>. Nous avons un programme 
+                de bug bounty pour récompenser les chercheurs en sécurité.
+            </p>
+
+            <h3>4. Transparence</h3>
+            <p>Nous nous engageons à :</p>
+            <ul>
+                <li>📢 Vous informer dans les 72h en cas de fuite de données</li>
+                <li>📊 Publier un rapport de transparence annuel</li>
+                <li>🔍 Permettre des audits de sécurité indépendants</li>
+                <li>📖 Maintenir cette page à jour</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Nebula Drive - Tous droits réservés</p>
+            <p style="margin-top: 12px;">
+                Des questions ? Contactez-nous à 
+                <a href="mailto:legal@nebula-drive.com" style="color: #3b82f6; text-decoration: none;">
+                    legal@nebula-drive.com
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Masquer tous les contenus
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Désactiver tous les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Activer l'onglet et le contenu sélectionnés
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Scroller vers le haut
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Drive - Administration</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                        </svg>
+                    </div>
+                    Nebula Drive
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Navigation</div>
+                    <a class="nav-item" href="index.html">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Mes fichiers
+                    </a>
+                    <a class="nav-item active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Administration
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menu-toggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <h1 style="font-size: 1.3rem; font-weight: 600;">Panel d'Administration</h1>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Notifications -->
+                    <button class="header-btn" id="notifications-btn" title="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-dot" id="notification-badge" style="display: none;"></span>
+                    </button>
+                    
+                    <button class="header-btn" onclick="toggleTheme()" title="Changer le thème">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                    
+                    <div class="dropdown" id="user-dropdown">
+                        <div class="user-menu" id="user-menu">
+                            <div class="user-avatar" id="user-avatar">?</div>
+                            <div class="user-info">
+                                <span class="user-name" id="user-name">Admin</span>
+                                <span class="user-role" id="user-role">admin</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="index.html">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                Mes fichiers
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" onclick="logout()" style="color: var(--accent-danger);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <!-- Stats Cards -->
+                <div class="admin-stats" id="admin-stats">
+                    <!-- Stats chargées dynamiquement -->
+                    <div class="stat-card">
+                        <div class="loading-spinner" style="margin: 20px auto;"></div>
+                    </div>
+                </div>
+
+                 <!-- ✅ SECTION ANNONCES -->
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="font-size: 1.2rem; font-weight: 600;">📢 Annonces aux utilisateurs</h2>
+                        <button class="btn btn-primary" onclick="adminManager.openAnnouncementModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14"></path>
+                                <path d="M5 12h14"></path>
+                            </svg>
+                            Nouvelle annonce
+                        </button>
+                    </div>
+                    <div id="announcements-list" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px;">
+                        <div class="loading-spinner" style="margin: 20px auto;"></div>
+                    </div>
+                </div>
+
+                 <!-- ✅ SECTION JOURNAL D'ACTIVITÉ -->
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="font-size: 1.2rem; font-weight: 600;">📋 Journal d'activité</h2>
+                        <div style="display: flex; gap: 12px;">
+                            <select id="activity-filter" class="form-select" style="width: auto;" onchange="adminManager.filterActivities(this.value)">
+                                <option value="all">Toutes les activités</option>
+                                <option value="auth">Authentification</option>
+                                <option value="file">Fichiers</option>
+                                <option value="share">Partages</option>
+                                <option value="admin">Administration</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="adminManager.loadActivities()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <polyline points="1 20 1 14 7 14"></polyline>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                                Actualiser
+                            </button>
+                        </div>
+                    </div>
+                    <div id="activities-list" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden;">
+                        <div class="loading-spinner" style="margin: 20px auto;"></div>
+                    </div>
+                </div>
+
+                <!-- Users Section -->
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="font-size: 1.2rem; font-weight: 600;">Gestion des utilisateurs</h2>
+                        <button class="btn btn-secondary" onclick="refreshAdmin()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Actualiser
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Abonnement</th>
+                                    <th>Stockage</th>
+                                    <th>Inscrit le</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 40px;">
+                                        <div class="loading-spinner" style="margin: 0 auto;"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Notifications Panel -->
+        <div class="notifications-panel" id="notifications-panel">
+            <div class="notifications-header">
+                <h3 class="notifications-title">Notifications <span id="notification-count" style="display: none;"></span></h3>
+                <div>
+                    <button class="btn btn-sm btn-secondary" onclick="notificationManager.markAllAsRead()">Tout marquer lu</button>
+                    <button class="modal-close" id="close-notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="notifications-list" id="notifications-list">
+                <!-- Notifications chargées dynamiquement -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Edit User -->
+    <div id="edit-user-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier l'utilisateur</h3>
+                <button class="modal-close" onclick="adminManager.closeEditModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-user-id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-user-role">Rôle</label>
+                    <select id="edit-user-role" class="form-select">
+                        <option value="basic">Basic</option>
+                        <option value="premium">Premium</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edit-user-subscription">Abonnement</label>
+                    <select id="edit-user-subscription" class="form-select">
+                        <option value="free">Gratuit</option>
+                        <option value="premium">Premium</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edit-user-quota">Quota de stockage (MB)</label>
+                    <input type="number" id="edit-user-quota" class="form-input" min="10" max="10240">
+                    <p class="form-hint">Entre 10 MB et 10 GB</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-user-password">Nouveau Mot de passe (optionnel)</label>
+                    <input type="password" id="edit-user-password" class="form-input" placeholder="Laisser vide pour ne pas changer">
+                    <p class="form-hint">Minimum 6 caractères si rempli</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="adminManager.closeEditModal()">Annuler</button>
+                <button class="btn btn-primary" onclick="adminManager.saveUserEdit()">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ✅ MODAL ANNONCE -->
+<div id="announcement-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">📢 Nouvelle annonce</h3>
+            <button class="modal-close" onclick="adminManager.closeAnnouncementModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label" for="announcement-title">Titre de l'annonce</label>
+                <input type="text" id="announcement-title" class="form-input" placeholder="Ex: Maintenance programmée" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="announcement-message">Message</label>
+                <textarea id="announcement-message" class="form-input" rows="5" placeholder="Décrivez l'information à communiquer..." maxlength="500"></textarea>
+                <p class="form-hint">Maximum 500 caractères</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="announcement-type">Type d'annonce</label>
+                <select id="announcement-type" class="form-select">
+                    <option value="info">ℹ️ Information</option>
+                    <option value="warning">⚠️ Attention</option>
+                    <option value="success">✅ Bonne nouvelle</option>
+                    <option value="maintenance">🔧 Maintenance</option>
+                </select>
+            </div>
+
+            <!-- ✅ NOUVEAU : Sélection des destinataires -->
+            <div class="form-group">
+                <label class="form-label" for="announcement-target">Destinataires</label>
+                <select id="announcement-target" class="form-select" onchange="adminManager.handleAnnouncementTargetChange(this.value)">
+                    <option value="all">👥 Tous les utilisateurs</option>
+                    <option value="specific">🎯 Utilisateurs spécifiques</option>
+                </select>
+            </div>
+
+            <!-- ✅ Liste des utilisateurs (cachée par défaut) -->
+            <div id="announcement-users-list" style="display: none; margin-top: 12px;">
+                <!-- Chargé dynamiquement -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="adminManager.closeAnnouncementModal()">Annuler</button>
+            <button class="btn btn-primary" onclick="adminManager.sendAnnouncement()">Envoyer</button>
+        </div>
+    </div>
+</div>
+    <!-- Modal confirm -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmation</h3>
+                <button class="modal-close" onclick="closeModal('confirm-modal')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="confirm-message">Êtes-vous sûr ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirm-modal')">Annuler</button>
+                <button class="btn btn-danger" onclick="confirmAction()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/files.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // ========================================
+        // INITIALISATION PAGE ADMIN
+        // ========================================
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Vérifier authentification
+            auth.loadSession();
+            
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Vérifier droits admin
+            if (!auth.isAdmin()) {
+                showToast('error', 'Accès refusé', 'Vous n\'êtes pas administrateur');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+            
+            // Initialiser l'interface
+            updateUserDisplay();
+            
+            // Charger les données
+            await adminManager.loadStats();
+            
+            // ✅ CORRECTION: Démarrer le polling des notifications
+            notificationManager.startPolling();
+            
+            // Initialiser les événements
+            initAdminEvents();
+        });
+        
+        // ========================================
+        // ÉVÉNEMENTS
+        // ========================================
+        
+        function initAdminEvents() {
+            // Sidebar toggle
+            document.getElementById('menu-toggle')?.addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.getElementById('sidebar-overlay').classList.toggle('active');
+            });
+
+            document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.remove('active');
+                document.getElementById('sidebar-overlay').classList.remove('active');
+            });
+            
+            // User menu
+            document.getElementById('user-menu')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('user-dropdown').classList.toggle('active');
+            });
+            
+            document.addEventListener('click', () => {
+                document.getElementById('user-dropdown')?.classList.remove('active');
+            });
+            
+            // ✅ CORRECTION: Bouton notifications
+            document.getElementById('notifications-btn')?.addEventListener('click', () => {
+                notificationManager.togglePanel();
+            });
+            
+            // ✅ CORRECTION: Fermer panel notifications
+            document.getElementById('close-notifications')?.addEventListener('click', () => {
+                document.getElementById('notifications-panel')?.classList.remove('active');
+            });
+        }
+        
+        // ========================================
+        // FONCTIONS UTILITAIRES
+        // ========================================
+        
+        function updateUserDisplay() {
+            const user = auth.getUser();
+            if (!user) return;
+            
+            const avatar = document.getElementById('user-avatar');
+            const name = document.getElementById('user-name');
+            const role = document.getElementById('user-role');
+            
+            if (avatar) avatar.textContent = user.username.charAt(0).toUpperCase();
+            if (name) name.textContent = user.username;
+            if (role) role.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        }
+        
+        // ✅ CORRECTION: Fonction de rafraîchissement complète
+        async function refreshAdmin() {
+            try {
+                showLoading(true);
+                
+                // Recharger les stats
+                await adminManager.loadStats();
+                
+                // Recharger les notifications
+                await notificationManager.loadNotifications();
+                
+                showToast('success', 'Actualisé', 'Données mises à jour');
+            } catch (error) {
+                console.error('Erreur refresh:', error);
+                showToast('error', 'Erreur', 'Impossible d\'actualiser');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // ========================================
+        // CLEANUP
+        // ========================================
+        
+        window.addEventListener('beforeunload', () => {
+            // Arrêter le polling
+            notificationManager.stopPolling();
+        });
+    </script>
+</body>
+</html>

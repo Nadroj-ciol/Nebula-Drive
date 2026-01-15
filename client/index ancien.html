@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NébulaDrive — Votre Cloud Personnel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-hover: #e2e8f0;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-hover: #475569;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.4), 0 8px 10px -6px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ===================== AUTH SCREENS ===================== */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
+            animation: floatGradient 20s ease-in-out infinite;
+        }
+
+        @keyframes floatGradient {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo i {
+            font-size: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-logo p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            background: var(--bg-tertiary);
+            padding: 4px;
+            border-radius: var(--radius);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 14px 14px 44px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-icon {
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .auth-error.show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ===================== MAIN APP ===================== */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .app-container.active {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .sidebar-logo span {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-item span {
+            font-weight: 500;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .storage-info {
+            margin-bottom: 12px;
+        }
+
+        .storage-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .storage-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: var(--bg-hover);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .menu-toggle {
+            display: none;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+        }
+
+        .menu-toggle:hover {
+            background: var(--bg-hover);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .breadcrumb-item.clickable {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .breadcrumb-item.clickable:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-item.current {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .breadcrumb-sep {
+            color: var(--text-muted);
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 40px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-body {
+            flex: 1;
+            padding: 32px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-right: auto;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        /* File Grid */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .file-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .file-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .file-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .file-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        .file-icon.folder {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            color: var(--accent);
+        }
+
+        .file-icon.image {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: var(--success);
+        }
+
+        .file-icon.document {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
+            color: var(--primary);
+        }
+
+        .file-icon.archive {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+            color: #8b5cf6;
+        }
+
+        .file-icon.video {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+            color: #ec4899;
+        }
+
+        .file-icon.audio {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0.05) 100%);
+            color: #0ea5e9;
+        }
+
+        .file-icon.default {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+        }
+
+        .file-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .file-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .file-card:hover .file-actions {
+            opacity: 1;
+        }
+
+        .file-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .file-action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .file-action-btn.danger:hover {
+            background: var(--danger);
+        }
+
+        /* File List View */
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-row:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .file-row .file-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0;
+            font-size: 18px;
+        }
+
+        .file-row .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-row .file-name {
+            margin-bottom: 2px;
+        }
+
+        .file-row .file-actions {
+            position: static;
+            opacity: 0;
+        }
+
+        .file-row:hover .file-actions {
+            opacity: 1;
+        }
+
+        /* Shared Files Indicator */
+        .shared-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .owner-tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* ===================== MODALS ===================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.95) translateY(10px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            justify-content: flex-end;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-zone i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .upload-zone h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-zone p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .upload-list {
+            margin-top: 20px;
+        }
+
+        .upload-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+
+        .upload-item i {
+            color: var(--primary);
+        }
+
+        .upload-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .upload-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .upload-item-size {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .upload-item-remove {
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .upload-progress {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Share Modal */
+        .share-user-search {
+            margin-bottom: 20px;
+        }
+
+        .share-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+        }
+
+        .share-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .share-result-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .share-current {
+            margin-top: 24px;
+        }
+
+        .share-current h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .share-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+
+        .share-item .user-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 14px;
+        }
+
+        .share-item-info {
+            flex: 1;
+        }
+
+        .share-item-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .share-item-perm {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .share-item select {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .share-item-remove {
+            color: var(--danger);
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Notifications Panel */
+        .notifications-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            max-width: 100vw;
+            height: 100vh;
+            background: var(--bg-secondary);
+            box-shadow: var(--shadow-xl);
+            z-index: 200;
+            transition: right 0.3s ease;
+        }
+
+        .notifications-panel.active {
+            right: 0;
+        }
+
+        .notif-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .notif-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .notif-list {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .notif-item {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .notif-item.unread {
+            background: rgba(99, 102, 241, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        .notif-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .notif-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .notif-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .notif-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .notif-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding: 12px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            min-width: 180px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .context-menu.active {
+            display: block;
+            animation: scaleIn 0.15s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .context-menu-item:first-child {
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+
+        .context-menu-item:last-child {
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        }
+
+        .context-menu-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .context-menu-item.danger {
+            color: var(--danger);
+        }
+
+        .context-menu-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .context-menu-sep {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .dark .loading-overlay {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 1024px) {
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+                display: none;
+            }
+
+            .sidebar-backdrop.active {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .main-header {
+                padding: 12px 16px;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .main-body {
+                padding: 16px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-title {
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .auth-card {
+                padding: 32px 24px;
+            }
+
+            .notifications-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .toast-container {
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+            }
+
+            .toast {
+                min-width: auto;
+            }
+        }
+
+        /* ===================== UTILITIES ===================== */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 16px;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <i class="fas fa-cloud"></i>
+                <h1>NébulaDrive</h1>
+                <p>Votre cloud personnel sécurisé</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Connexion</button>
+                <button class="auth-tab" data-tab="register">Inscription</button>
+            </div>
+
+            <div class="auth-error" id="authError">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="authErrorText"></span>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label>Identifiant ou Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-input" id="loginIdentifier" placeholder="utilisateur ou email@exemple.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span>Se connecter</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-input" id="regUsername" placeholder="monpseudo" required minlength="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Adresse email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-input" id="regEmail" placeholder="email@exemple.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" id="regPassword" placeholder="Minimum 6 caractères" required minlength="6">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    <span>Créer mon compte</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="appContainer">
+        <!-- Sidebar Backdrop (mobile) -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-cloud"></i>
+                    <span>NébulaDrive</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Navigation</div>
+                    <div class="nav-item active" data-view="files">
+                        <i class="fas fa-folder"></i>
+                        <span>Mes fichiers</span>
+                    </div>
+                    <div class="nav-item" data-view="shared">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Partagés avec moi</span>
+                    </div>
+                    <div class="nav-item" data-view="notifications" id="navNotifications">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span class="nav-badge hidden" id="notifBadge">0</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Actions rapides</div>
+                    <div class="nav-item" id="quickUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Uploader</span>
+                    </div>
+                    <div class="nav-item" id="quickFolder">
+                        <i class="fas fa-folder-plus"></i>
+                        <span>Nouveau dossier</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="storage-info">
+                    <div class="storage-label">
+                        <span>Stockage utilisé</span>
+                        <span id="storageText">0 MB / 100 MB</span>
+                    </div>
+                    <div class="storage-bar">
+                        <div class="storage-fill" id="storageFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="user-profile" id="userProfile">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Utilisateur</div>
+                        <div class="user-email" id="userEmail">email@exemple.com</div>
+                    </div>
+                    <i class="fas fa-sign-out-alt" style="color: var(--text-muted);"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+
+                <nav class="breadcrumb" id="breadcrumb">
+                    <div class="breadcrumb-item clickable" data-folder="null">
+                        <i class="fas fa-home"></i>
+                    </div>
+                </nav>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Rechercher des fichiers..." id="searchInput">
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-icon btn-secondary" id="refreshBtn" title="Rafraîchir">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="main-body">
+                <!-- Files View -->
+                <section class="view-section active" id="viewFiles">
+                    <div class="toolbar">
+                        <h2 class="toolbar-title" id="viewTitle">Mes fichiers</h2>
+                        <button class="btn btn-secondary btn-sm" id="btnNewFolder">
+                            <i class="fas fa-folder-plus"></i>
+                            <span>Dossier</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm" id="btnUpload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Uploader</span>
+                        </button>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grille">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="Liste">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="files-container" id="filesContainer">
+                        <div class="files-grid" id="filesGrid"></div>
+                    </div>
+                </section>
+
+                <!-- Shared View -->
+                <section class="view-section" id="viewShared" style="display: none;">
+                    <div class="toolbar">
+                        <h2 class="toolbar-title">Partagés avec moi</h2>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grille">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="Liste">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="files-grid" id="sharedGrid"></div>
+                </section>
+
+                <!-- Notifications View -->
+                <section class="view-section" id="viewNotifications" style="display: none;">
+                    <div class="toolbar">
+                        <h2 class="toolbar-title">Notifications</h2>
+                        <button class="btn btn-secondary btn-sm" id="markAllRead">
+                            <i class="fas fa-check-double"></i>
+                            <span>Tout marquer lu</span>
+                        </button>
+                    </div>
+                    <div id="notificationsList"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Uploader des fichiers</h3>
+                <button class="modal-close" onclick="closeModal('uploadModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="uploadZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h4>Glissez vos fichiers ici</h4>
+                    <p>ou cliquez pour sélectionner (max 100 MB par fichier)</p>
+                    <input type="file" id="fileInput" multiple hidden>
+                </div>
+                <div class="upload-list" id="uploadList"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('uploadModal')">Annuler</button>
+                <button class="btn btn-primary" id="uploadSubmit" disabled>
+                    <i class="fas fa-upload"></i>
+                    Uploader
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Folder Modal -->
+    <div class="modal-overlay" id="folderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouveau dossier</h3>
+                <button class="modal-close" onclick="closeModal('folderModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nom du dossier</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-folder"></i>
+                        <input type="text" class="form-input" id="folderName" placeholder="Mon nouveau dossier">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('folderModal')">Annuler</button>
+                <button class="btn btn-primary" id="folderSubmit">
+                    <i class="fas fa-folder-plus"></i>
+                    Créer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Partager le fichier</h3>
+                <button class="modal-close" onclick="closeModal('shareModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="share-user-search">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Rechercher un utilisateur</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-input" id="shareUserSearch" placeholder="Nom d'utilisateur...">
+                    </div>
+                    <div class="share-results hidden" id="shareResults"></div>
+                </div>
+                <div class="share-current" id="shareCurrentSection">
+                    <h4>Partagé avec</h4>
+                    <div id="shareCurrentList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Renommer</h3>
+                <button class="modal-close" onclick="closeModal('renameModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nouveau nom</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-edit"></i>
+                        <input type="text" class="form-input" id="renameName" placeholder="Nouveau nom">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('renameModal')">Annuler</button>
+                <button class="btn btn-primary" id="renameSubmit">
+                    <i class="fas fa-check"></i>
+                    Renommer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmTitle">Confirmer</h3>
+                <button class="modal-close" onclick="closeModal('confirmModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Êtes-vous sûr ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('confirmModal')">Annuler</button>
+                <button class="btn btn-danger" id="confirmSubmit">
+                    <i class="fas fa-check"></i>
+                    Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" data-action="open">
+            <i class="fas fa-folder-open"></i>
+            <span>Ouvrir</span>
+        </div>
+        <div class="context-menu-item" data-action="download">
+            <i class="fas fa-download"></i>
+            <span>Télécharger</span>
+        </div>
+        <div class="context-menu-sep"></div>
+        <div class="context-menu-item" data-action="share">
+            <i class="fas fa-share-alt"></i>
+            <span>Partager</span>
+        </div>
+        <div class="context-menu-item" data-action="rename">
+            <i class="fas fa-edit"></i>
+            <span>Renommer</span>
+        </div>
+        <div class="context-menu-sep"></div>
+        <div class="context-menu-item danger" data-action="delete">
+            <i class="fas fa-trash"></i>
+            <span>Supprimer</span>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // =====================================================
+        // CONFIGURATION — Modifiez l'URL de votre API ici
+        // =====================================================
+        const BASE_URL = 'http://192.168.100.25:3000/api';
+        // =====================================================
+
+        // State
+        let token = null;
+        let currentUser = null;
+        let currentFolder = null;
+        let currentView = 'files';
+        let viewMode = 'grid';
+        let selectedFiles = [];
+        let contextFile = null;
+
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const appContainer = document.getElementById('appContainer');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        // ===================== THEME =====================
+        function initTheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        }
+        initTheme();
+
+        // ===================== API HELPERS =====================
+        async function api(endpoint, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                ...options,
+                headers
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Une erreur est survenue');
+            }
+
+            return data;
+        }
+
+        async function apiUpload(endpoint, formData) {
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erreur lors de l\'upload');
+            }
+
+            return data;
+        }
+
+        // ===================== TOASTS =====================
+        function showToast(type, title, message = '') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+
+            toast.innerHTML = `
+                <i class="fas ${icons[type]} toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ===================== MODALS =====================
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showConfirm(title, message) {
+            return new Promise((resolve) => {
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                openModal('confirmModal');
+
+                const submitBtn = document.getElementById('confirmSubmit');
+                const newBtn = submitBtn.cloneNode(true);
+                submitBtn.parentNode.replaceChild(newBtn, submitBtn);
+
+                newBtn.addEventListener('click', () => {
+                    closeModal('confirmModal');
+                    resolve(true);
+                });
+
+                document.querySelector('#confirmModal .btn-secondary').addEventListener('click', () => {
+                    resolve(false);
+                }, { once: true });
+            });
+        }
+
+        // ===================== AUTH =====================
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + 'Form').classList.add('active');
+                hideAuthError();
+            });
+        });
+
+        function showAuthError(message) {
+            const errorEl = document.getElementById('authError');
+            document.getElementById('authErrorText').textContent = message;
+            errorEl.classList.add('show');
+        }
+
+        function hideAuthError() {
+            document.getElementById('authError').classList.remove('show');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthError();
+
+            const identifier = document.getElementById('loginIdentifier').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const data = await api('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ identifier, password })
+                });
+
+                token = data.token;
+                currentUser = data.user;
+
+                showApp();
+            } catch (err) {
+                showAuthError(err.message);
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthError();
+
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            try {
+                await api('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                showToast('success', 'Inscription réussie', 'Vous pouvez maintenant vous connecter');
+                document.querySelector('[data-tab="login"]').click();
+                document.getElementById('loginIdentifier').value = username;
+            } catch (err) {
+                showAuthError(err.message);
+            }
+        });
+
+        function logout() {
+            token = null;
+            currentUser = null;
+            authContainer.style.display = 'flex';
+            appContainer.classList.remove('active');
+        }
+
+        document.getElementById('userProfile').addEventListener('click', logout);
+
+        // ===================== APP INIT =====================
+        function showApp() {
+            authContainer.style.display = 'none';
+            appContainer.classList.add('active');
+            updateUserUI();
+            loadFiles();
+            loadNotificationsCount();
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.username;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+                const used = currentUser.storage_used || 0;
+                const quota = currentUser.storage_quota || 104857600;
+                const percent = Math.min((used / quota) * 100, 100);
+
+                document.getElementById('storageFill').style.width = percent + '%';
+                document.getElementById('storageText').textContent =
+                    `${formatBytes(used)} / ${formatBytes(quota)}`;
+            }
+        }
+
+        // Session is managed in-memory only (no persistent storage in iframe)
+        // User needs to login each time the app is loaded
+
+        // ===================== SIDEBAR =====================
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            sidebar.classList.add('open');
+            sidebarBackdrop.classList.add('active');
+        });
+
+        sidebarBackdrop.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarBackdrop.classList.remove('active');
+        });
+
+        document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+            item.addEventListener('click', () => {
+                const view = item.dataset.view;
+                switchView(view);
+                sidebar.classList.remove('open');
+                sidebarBackdrop.classList.remove('active');
+            });
+        });
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item[data-view="${view}"]`).classList.add('active');
+
+            document.getElementById('viewFiles').style.display = view === 'files' ? 'block' : 'none';
+            document.getElementById('viewShared').style.display = view === 'shared' ? 'block' : 'none';
+            document.getElementById('viewNotifications').style.display = view === 'notifications' ? 'block' : 'none';
+
+            if (view === 'files') {
+                loadFiles();
+            } else if (view === 'shared') {
+                loadSharedFiles();
+            } else if (view === 'notifications') {
+                loadNotifications();
+            }
+        }
+
+        // ===================== FILES =====================
+        async function loadFiles(folderId = null) {
+            currentFolder = folderId;
+            const container = document.getElementById('filesGrid');
+
+            try {
+                const endpoint = folderId ? `/files?folder=${folderId}` : '/files';
+                const data = await api(endpoint);
+
+                renderBreadcrumb(data.breadcrumb || []);
+                renderFiles(data.files, container);
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        }
+
+        async function loadSharedFiles() {
+            const container = document.getElementById('sharedGrid');
+
+            try {
+                const data = await api('/files/shared');
+                renderFiles(data.files, container, true);
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        }
+
+        function renderBreadcrumb(path) {
+            const container = document.getElementById('breadcrumb');
+            container.innerHTML = `
+                <div class="breadcrumb-item clickable" data-folder="null">
+                    <i class="fas fa-home"></i>
+                </div>
+            `;
+
+            path.forEach((item, index) => {
+                const isLast = index === path.length - 1;
+                container.innerHTML += `
+                    <span class="breadcrumb-sep"><i class="fas fa-chevron-right" style="font-size: 10px;"></i></span>
+                    <div class="breadcrumb-item ${isLast ? 'current' : 'clickable'}" data-folder="${item.id}">
+                        ${item.name}
+                    </div>
+                `;
+            });
+
+            container.querySelectorAll('.breadcrumb-item.clickable').forEach(item => {
+                item.addEventListener('click', () => {
+                    const folderId = item.dataset.folder === 'null' ? null : parseInt(item.dataset.folder);
+                    loadFiles(folderId);
+                });
+            });
+        }
+
+        function renderFiles(files, container, isShared = false) {
+            if (files.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>${isShared ? 'Aucun fichier partagé' : 'Ce dossier est vide'}</h3>
+                        <p>${isShared ? 'Les fichiers partagés avec vous apparaîtront ici' : 'Uploadez des fichiers ou créez un dossier'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const isGrid = viewMode === 'grid';
+            container.className = isGrid ? 'files-grid' : 'files-list';
+
+            container.innerHTML = files.map(file => {
+                const icon = getFileIcon(file);
+                const size = file.is_folder ? '' : formatBytes(file.size);
+                const ownerInfo = isShared && file.owner_name ? `<span class="owner-tag">Par ${file.owner_name}</span>` : '';
+
+                if (isGrid) {
+                    return `
+                        <div class="file-card" data-id="${file.id}" data-folder="${file.is_folder ? 1 : 0}">
+                            <div class="file-actions">
+                                ${!file.is_folder ? `<button class="file-action-btn" data-action="download" title="Télécharger"><i class="fas fa-download"></i></button>` : ''}
+                                ${!isShared ? `<button class="file-action-btn" data-action="share" title="Partager"><i class="fas fa-share-alt"></i></button>` : ''}
+                                ${!isShared ? `<button class="file-action-btn danger" data-action="delete" title="Supprimer"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
+                            <div class="file-icon ${icon.class}">
+                                <i class="${icon.icon}"></i>
+                            </div>
+                            <div class="file-name" title="${file.original_name}">${file.original_name}</div>
+                            <div class="file-meta">${size}</div>
+                            ${ownerInfo}
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="file-row" data-id="${file.id}" data-folder="${file.is_folder ? 1 : 0}">
+                            <div class="file-icon ${icon.class}">
+                                <i class="${icon.icon}"></i>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name" title="${file.original_name}">${file.original_name}</div>
+                                <div class="file-meta">${size}${ownerInfo ? ' • ' + file.owner_name : ''}</div>
+                            </div>
+                            <div class="file-actions">
+                                ${!file.is_folder ? `<button class="file-action-btn" data-action="download" title="Télécharger"><i class="fas fa-download"></i></button>` : ''}
+                                ${!isShared ? `<button class="file-action-btn" data-action="share" title="Partager"><i class="fas fa-share-alt"></i></button>` : ''}
+                                ${!isShared ? `<button class="file-action-btn danger" data-action="delete" title="Supprimer"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            // Attach event listeners
+            container.querySelectorAll('[data-id]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.closest('.file-action-btn')) return;
+                    const id = parseInt(el.dataset.id);
+                    const isFolder = el.dataset.folder === '1';
+                    if (isFolder) {
+                        loadFiles(id);
+                    }
+                });
+
+                el.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showContextMenu(e, el);
+                });
+            });
+
+            container.querySelectorAll('.file-action-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const action = btn.dataset.action;
+                    const fileEl = btn.closest('[data-id]');
+                    const fileId = parseInt(fileEl.dataset.id);
+                    const isFolder = fileEl.dataset.folder === '1';
+                    const fileName = fileEl.querySelector('.file-name').textContent;
+
+                    handleFileAction(action, fileId, isFolder, fileName);
+                });
+            });
+        }
+
+        function getFileIcon(file) {
+            if (file.is_folder) {
+                return { icon: 'fas fa-folder', class: 'folder' };
+            }
+
+            const mime = file.mime_type || '';
+            const ext = file.original_name.split('.').pop().toLowerCase();
+
+            if (mime.startsWith('image/') || ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) {
+                return { icon: 'fas fa-image', class: 'image' };
+            }
+            if (mime.startsWith('video/') || ['mp4', 'avi', 'mov', 'mkv'].includes(ext)) {
+                return { icon: 'fas fa-video', class: 'video' };
+            }
+            if (mime.startsWith('audio/') || ['mp3', 'wav', 'ogg', 'flac'].includes(ext)) {
+                return { icon: 'fas fa-music', class: 'audio' };
+            }
+            if (['pdf'].includes(ext)) {
+                return { icon: 'fas fa-file-pdf', class: 'document' };
+            }
+            if (['doc', 'docx', 'txt', 'rtf', 'odt'].includes(ext)) {
+                return { icon: 'fas fa-file-alt', class: 'document' };
+            }
+            if (['xls', 'xlsx', 'csv'].includes(ext)) {
+                return { icon: 'fas fa-file-excel', class: 'document' };
+            }
+            if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+                return { icon: 'fas fa-file-archive', class: 'archive' };
+            }
+            if (['js', 'html', 'css', 'py', 'java', 'cpp', 'json'].includes(ext)) {
+                return { icon: 'fas fa-file-code', class: 'document' };
+            }
+
+            return { icon: 'fas fa-file', class: 'default' };
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // ===================== FILE ACTIONS =====================
+        async function handleFileAction(action, fileId, isFolder, fileName) {
+            switch (action) {
+                case 'open':
+                    if (isFolder) loadFiles(fileId);
+                    break;
+
+                case 'download':
+                    if (!isFolder) downloadFile(fileId, fileName);
+                    break;
+
+                case 'share':
+                    openShareModal(fileId, fileName);
+                    break;
+
+                case 'rename':
+                    openRenameModal(fileId, fileName);
+                    break;
+
+                case 'delete':
+                    const confirmed = await showConfirm(
+                        'Supprimer ' + (isFolder ? 'le dossier' : 'le fichier'),
+                        `Êtes-vous vraiment vraiment sûr sûr sûr de vouloir supprimer "${fileName}" ? Cette action est irréversible.`
+                    );
+                    if (confirmed) {
+                        await deleteFile(fileId);
+                    }
+                    break;
+            }
+        }
+
+        function downloadFile(fileId, fileName) {
+            const link = document.createElement('a');
+            link.href = `${BASE_URL}/files/${fileId}/download`;
+            link.download = fileName;
+            link.target = '_blank';
+
+            // Add token to download request
+            fetch(`${BASE_URL}/files/${fileId}/download`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+                showToast('success', 'Téléchargement démarré', fileName);
+            })
+            .catch(err => showToast('error', 'Erreur', err.message));
+        }
+
+        async function deleteFile(fileId) {
+            try {
+                await api(`/files/${fileId}`, { method: 'DELETE' });
+                showToast('success', 'Supprimé', 'Le fichier a été supprimé');
+                loadFiles(currentFolder);
+                refreshUserInfo();
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        }
+
+        // ===================== UPLOAD =====================
+        let filesToUpload = [];
+
+        document.getElementById('btnUpload').addEventListener('click', () => openModal('uploadModal'));
+        document.getElementById('quickUpload').addEventListener('click', () => openModal('uploadModal'));
+
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            filesToUpload = [...filesToUpload, ...Array.from(files)];
+            renderUploadList();
+        }
+
+        function renderUploadList() {
+            const list = document.getElementById('uploadList');
+            const submitBtn = document.getElementById('uploadSubmit');
+
+            list.innerHTML = filesToUpload.map((file, index) => `
+                <div class="upload-item">
+                    <i class="fas fa-file"></i>
+                    <div class="upload-item-info">
+                        <div class="upload-item-name">${file.name}</div>
+                        <div class="upload-item-size">${formatBytes(file.size)}</div>
+                    </div>
+                    <i class="fas fa-times upload-item-remove" data-index="${index}"></i>
+                </div>
+            `).join('');
+
+            list.querySelectorAll('.upload-item-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filesToUpload.splice(parseInt(btn.dataset.index), 1);
+                    renderUploadList();
+                });
+            });
+
+            submitBtn.disabled = filesToUpload.length === 0;
+        }
+
+        document.getElementById('uploadSubmit').addEventListener('click', async () => {
+            if (filesToUpload.length === 0) return;
+
+            const formData = new FormData();
+            filesToUpload.forEach(file => formData.append('files', file));
+            if (currentFolder) formData.append('folder', currentFolder);
+
+            try {
+                await apiUpload('/files/upload', formData);
+                showToast('success', 'Upload réussi', `${filesToUpload.length} fichier(s) uploadé(s)`);
+                filesToUpload = [];
+                renderUploadList();
+                closeModal('uploadModal');
+                loadFiles(currentFolder);
+                refreshUserInfo();
+            } catch (err) {
+                showToast('error', 'Erreur d\'upload', err.message);
+            }
+        });
+
+        // ===================== NEW FOLDER =====================
+        document.getElementById('btnNewFolder').addEventListener('click', () => {
+            document.getElementById('folderName').value = '';
+            openModal('folderModal');
+        });
+
+        document.getElementById('quickFolder').addEventListener('click', () => {
+            document.getElementById('folderName').value = '';
+            openModal('folderModal');
+        });
+
+        document.getElementById('folderSubmit').addEventListener('click', async () => {
+            const name = document.getElementById('folderName').value.trim();
+            if (!name) {
+                showToast('warning', 'Nom requis', 'Veuillez entrer un nom pour le dossier');
+                return;
+            }
+
+            try {
+                await api('/files/folder', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, parentId: currentFolder })
+                });
+                showToast('success', 'Dossier créé', name);
+                closeModal('folderModal');
+                loadFiles(currentFolder);
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        });
+
+        // ===================== RENAME =====================
+        let fileToRename = null;
+
+        function openRenameModal(fileId, currentName) {
+            fileToRename = fileId;
+            document.getElementById('renameName').value = currentName;
+            openModal('renameModal');
+        }
+
+        document.getElementById('renameSubmit').addEventListener('click', async () => {
+            const newName = document.getElementById('renameName').value.trim();
+            if (!newName) {
+                showToast('warning', 'Nom requis', 'Veuillez entrer un nouveau nom');
+                return;
+            }
+
+            try {
+                await api(`/files/${fileToRename}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ name: newName })
+                });
+                showToast('success', 'Renommé', newName);
+                closeModal('renameModal');
+                loadFiles(currentFolder);
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        });
+
+        // ===================== SHARE =====================
+        let fileToShare = null;
+
+        async function openShareModal(fileId, fileName) {
+            fileToShare = fileId;
+            document.querySelector('#shareModal .modal-title').textContent = `Partager "${fileName}"`;
+            document.getElementById('shareUserSearch').value = '';
+            document.getElementById('shareResults').classList.add('hidden');
+            document.getElementById('shareResults').innerHTML = '';
+            openModal('shareModal');
+            await loadCurrentShares(fileId);
+        }
+
+        async function loadCurrentShares(fileId) {
+            try {
+                const data = await api(`/shares/file/${fileId}`);
+                const list = document.getElementById('shareCurrentList');
+                const section = document.getElementById('shareCurrentSection');
+
+                if (data.shares.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+
+                section.style.display = 'block';
+                list.innerHTML = data.shares.map(share => `
+                    <div class="share-item" data-share-id="${share.id}">
+                        <div class="user-avatar">${share.username.charAt(0).toUpperCase()}</div>
+                        <div class="share-item-info">
+                            <div class="share-item-name">${share.username}</div>
+                            <div class="share-item-perm">${share.email}</div>
+                        </div>
+                        <select class="share-perm-select" data-share-id="${share.id}">
+                            <option value="read" ${share.permission === 'read' ? 'selected' : ''}>Lecture</option>
+                            <option value="write" ${share.permission === 'write' ? 'selected' : ''}>Écriture</option>
+                        </select>
+                        <i class="fas fa-times share-item-remove" data-share-id="${share.id}"></i>
+                    </div>
+                `).join('');
+
+                list.querySelectorAll('.share-perm-select').forEach(select => {
+                    select.addEventListener('change', async (e) => {
+                        const shareId = e.target.dataset.shareId;
+                        try {
+                            await api(`/shares/${shareId}`, {
+                                method: 'PUT',
+                                body: JSON.stringify({ permission: e.target.value })
+                            });
+                            showToast('success', 'Permission mise à jour');
+                        } catch (err) {
+                            showToast('error', 'Erreur', err.message);
+                        }
+                    });
+                });
+
+                list.querySelectorAll('.share-item-remove').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const shareId = btn.dataset.shareId;
+                        try {
+                            await api(`/shares/${shareId}`, { method: 'DELETE' });
+                            showToast('success', 'Partage révoqué');
+                            loadCurrentShares(fileToShare);
+                        } catch (err) {
+                            showToast('error', 'Erreur', err.message);
+                        }
+                    });
+                });
+            } catch (err) {
+                console.error('Error loading shares:', err);
+            }
+        }
+
+        let searchTimeout;
+        document.getElementById('shareUserSearch').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+
+            if (query.length < 2) {
+                document.getElementById('shareResults').classList.add('hidden');
+                return;
+            }
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const data = await api(`/users/search/${encodeURIComponent(query)}`);
+                    const results = document.getElementById('shareResults');
+
+                    if (data.users.length === 0) {
+                        results.innerHTML = '<div class="share-result-item">Aucun utilisateur trouvé</div>';
+                    } else {
+                        results.innerHTML = data.users.map(user => `
+                            <div class="share-result-item" data-username="${user.username}">
+                                <div class="user-avatar">${user.username.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <div style="font-weight: 500;">${user.username}</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">${user.email}</div>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        results.querySelectorAll('.share-result-item[data-username]').forEach(item => {
+                            item.addEventListener('click', async () => {
+                                const username = item.dataset.username;
+                                try {
+                                    await api('/shares', {
+                                        method: 'POST',
+                                        body: JSON.stringify({
+                                            fileId: fileToShare,
+                                            username,
+                                            permission: 'read'
+                                        })
+                                    });
+                                    showToast('success', 'Fichier partagé', `Avec ${username}`);
+                                    document.getElementById('shareUserSearch').value = '';
+                                    results.classList.add('hidden');
+                                    loadCurrentShares(fileToShare);
+                                } catch (err) {
+                                    showToast('error', 'Erreur', err.message);
+                                }
+                            });
+                        });
+                    }
+
+                    results.classList.remove('hidden');
+                } catch (err) {
+                    console.error('Search error:', err);
+                }
+            }, 300);
+        });
+
+        // ===================== CONTEXT MENU =====================
+        const contextMenu = document.getElementById('contextMenu');
+
+        function showContextMenu(e, fileEl) {
+            const fileId = parseInt(fileEl.dataset.id);
+            const isFolder = fileEl.dataset.folder === '1';
+            const fileName = fileEl.querySelector('.file-name').textContent;
+
+            contextFile = { id: fileId, isFolder, name: fileName };
+
+            // Show/hide appropriate options
+            contextMenu.querySelector('[data-action="open"]').style.display = isFolder ? 'flex' : 'none';
+            contextMenu.querySelector('[data-action="download"]').style.display = isFolder ? 'none' : 'flex';
+
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+            contextMenu.classList.add('active');
+        }
+
+        document.addEventListener('click', () => {
+            contextMenu.classList.remove('active');
+        });
+
+        contextMenu.querySelectorAll('.context-menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (contextFile) {
+                    handleFileAction(item.dataset.action, contextFile.id, contextFile.isFolder, contextFile.name);
+                }
+                contextMenu.classList.remove('active');
+            });
+        });
+
+        // ===================== NOTIFICATIONS =====================
+        async function loadNotificationsCount() {
+            try {
+                const data = await api('/notifications/count');
+                const badge = document.getElementById('notifBadge');
+                if (data.unreadCount > 0) {
+                    badge.textContent = data.unreadCount > 99 ? '99+' : data.unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            } catch (err) {
+                console.error('Error loading notifications count:', err);
+            }
+        }
+
+        async function loadNotifications() {
+            try {
+                const data = await api('/notifications');
+                const list = document.getElementById('notificationsList');
+
+                if (data.notifications.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-bell-slash"></i>
+                            <h3>Aucune notification</h3>
+                            <p>Vos notifications apparaîtront ici</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = data.notifications.map(notif => `
+                    <div class="notif-item ${notif.is_read ? '' : 'unread'}" data-id="${notif.id}">
+                        <div class="notif-title">${notif.title}</div>
+                        <div class="notif-message">${notif.message}</div>
+                        <div class="notif-time">${formatDate(notif.created_at)}</div>
+                    </div>
+                `).join('');
+
+                list.querySelectorAll('.notif-item').forEach(item => {
+                    item.addEventListener('click', async () => {
+                        const id = item.dataset.id;
+                        if (item.classList.contains('unread')) {
+                            try {
+                                await api(`/notifications/${id}/read`, { method: 'PUT' });
+                                item.classList.remove('unread');
+                                loadNotificationsCount();
+                            } catch (err) {
+                                console.error('Error marking notification as read:', err);
+                            }
+                        }
+                    });
+                });
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        }
+
+        document.getElementById('markAllRead').addEventListener('click', async () => {
+            try {
+                await api('/notifications/read-all', { method: 'PUT' });
+                showToast('success', 'Toutes les notifications marquées comme lues');
+                loadNotifications();
+                loadNotificationsCount();
+            } catch (err) {
+                showToast('error', 'Erreur', err.message);
+            }
+        });
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'À l\'instant';
+            if (diff < 3600000) return `Il y a ${Math.floor(diff / 60000)} min`;
+            if (diff < 86400000) return `Il y a ${Math.floor(diff / 3600000)} h`;
+            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        }
+
+        // ===================== SEARCH =====================
+        let searchDebounce;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchDebounce);
+            const query = e.target.value.trim();
+
+            if (query.length < 2) {
+                if (currentView === 'files') loadFiles(currentFolder);
+                return;
+            }
+
+            searchDebounce = setTimeout(async () => {
+                try {
+                    const data = await api(`/files/search?q=${encodeURIComponent(query)}`);
+                    document.getElementById('viewTitle').textContent = `Résultats: "${query}"`;
+                    renderFiles(data.files, document.getElementById('filesGrid'));
+                } catch (err) {
+                    showToast('error', 'Erreur', err.message);
+                }
+            }, 300);
+        });
+
+        // ===================== VIEW TOGGLE =====================
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                viewMode = btn.dataset.view;
+                if (currentView === 'files') {
+                    loadFiles(currentFolder);
+                } else if (currentView === 'shared') {
+                    loadSharedFiles();
+                }
+            });
+        });
+
+        // ===================== REFRESH =====================
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            if (currentView === 'files') {
+                loadFiles(currentFolder);
+            } else if (currentView === 'shared') {
+                loadSharedFiles();
+            } else if (currentView === 'notifications') {
+                loadNotifications();
+            }
+            loadNotificationsCount();
+            refreshUserInfo();
+            showToast('success', 'Rafraîchi');
+        });
+
+        async function refreshUserInfo() {
+            try {
+                const data = await api('/auth/me');
+                currentUser = data.user;
+                updateUserUI();
+            } catch (err) {
+                console.error('Error refreshing user info:', err);
+            }
+        }
+
+        // Periodic refresh
+        setInterval(() => {
+            if (token) {
+                loadNotificationsCount();
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
